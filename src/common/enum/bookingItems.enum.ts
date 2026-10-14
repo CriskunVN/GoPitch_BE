@@ -1,0 +1,8 @@
+export enum BookingItemStatus {
+  SCHEDULE = 'SCHEDULE',
+  CHECKED_IN = 'CHECKED_IN',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+  POSTPONED = 'POSTPONED',
+  NO_SHOW = 'NO_SHOW',
+}
