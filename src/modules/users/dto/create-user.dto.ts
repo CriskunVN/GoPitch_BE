@@ -7,6 +7,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { UserRole } from '../../../common/enum/user-role.enum.js';
+import { Transform } from 'class-transformer';
 
 export class CreateUserDto {
   @IsOptional()
@@ -14,14 +15,12 @@ export class CreateUserDto {
   name?: string;
 
   @IsEmail()
+  @Transform(({ value }) => value.toLowerCase())
   email: string;
 
   @IsString()
   @MinLength(6)
   password: string;
-
-  @IsUUID()
-  company_id: string;
 
   @IsOptional()
   @IsEnum(UserRole)

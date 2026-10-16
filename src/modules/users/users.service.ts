@@ -21,7 +21,6 @@ export class UsersService {
       name: createUserDto.name ?? null,
       email: createUserDto.email.toLowerCase(),
       password_hash,
-      company: { id: createUserDto.company_id } as Company,
       role: createUserDto.role ?? UserRole.CUSTOMER,
     });
 
@@ -35,7 +34,10 @@ export class UsersService {
   async findOne(id: string): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id } });
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException({
+        message: 'User not found',
+        errorCode: 'USER_NOT_FOUND',
+      });
     }
 
     return user;
@@ -54,26 +56,14 @@ export class UsersService {
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
 
-    if (updateUserDto.name !== undefined) {
-      user.name = updateUserDto.name;
-    }
-
     if (updateUserDto.email !== undefined) {
       user.email = updateUserDto.email.toLowerCase();
-    }
-
-    if (updateUserDto.role !== undefined) {
-      user.role = updateUserDto.role;
-    }
-
-    if (updateUserDto.company_id !== undefined) {
-      user.company = { id: updateUserDto.company_id } as Company;
     }
 
     if (updateUserDto.password) {
       user.password_hash = await bcrypt.hash(updateUserDto.password, 10);
     }
-
+    this.usersRepository.merge(user, updateUserDto);
     return this.usersRepository.save(user);
   }
 

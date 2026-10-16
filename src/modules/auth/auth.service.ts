@@ -28,7 +28,10 @@ export class AuthService {
   async register(registerDto: RegisterDto) {
     const existingUser = await this.usersService.findByEmail(registerDto.email);
     if (existingUser) {
-      throw new ConflictException('Email already exists');
+      throw new ConflictException({
+        message: 'Email is already in use',
+        errorCode: 'EMAIL_ALREADY_IN_USE',
+      });
     }
 
     const user = await this.usersService.create(registerDto);
@@ -63,7 +66,10 @@ export class AuthService {
 
       const user = await this.usersService.findOne(payload.sub);
       if (!user.refresh_token_hash) {
-        throw new UnauthorizedException('Refresh token is not valid');
+        throw new UnauthorizedException({
+          message: 'Refresh token is not haved',
+          errorCode: 'REFRESH_TOKEN_NOT_HAVED',
+        });
       }
 
       const refreshTokenMatch = await bcrypt.compare(
@@ -71,7 +77,10 @@ export class AuthService {
         user.refresh_token_hash,
       );
       if (!refreshTokenMatch) {
-        throw new UnauthorizedException('Refresh token is not valid');
+        throw new UnauthorizedException({
+          message: 'Refresh token is not valid',
+          errorCode: 'REFRESH_TOKEN_NOT_VALID',
+        });
       }
 
       const tokens = await this.generateTokens(user);
@@ -82,7 +91,10 @@ export class AuthService {
         ...tokens,
       };
     } catch {
-      throw new UnauthorizedException('Refresh token is not valid');
+      throw new UnauthorizedException({
+        message: 'Refresh token is not valid',
+        errorCode: 'REFRESH_TOKEN_NOT_VALID',
+      });
     }
   }
 
@@ -94,12 +106,18 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.usersService.findByEmail(email);
     if (!user || !user.isActive) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException({
+        message: 'Invalid credentials',
+        errorCode: 'INVALID_CREDENTIALS',
+      });
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password_hash);
     if (!passwordMatch) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException({
+        message: 'Invalid credentials',
+        errorCode: 'INVALID_CREDENTIALS',
+      });
     }
 
     return user;

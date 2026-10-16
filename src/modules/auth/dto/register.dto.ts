@@ -20,9 +20,6 @@ export class RegisterDto {
   @MinLength(6)
   password: string;
 
-  @IsUUID()
-  company_id: string;
-
   @IsOptional()
   @IsEnum(UserRole)
   role?: UserRole;

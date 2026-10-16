@@ -12,7 +12,6 @@ import { CompaniesModule } from './modules/companies/companies.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { UsersModule } from './modules/users/users.module.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { getDatabaseConfig } from './config/database/database.config.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseService } from './config/database/database.service.js';
 import { BookingItemsModule } from './modules/booking-items/booking-items.module.js';
@@ -28,8 +27,13 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) =>
-        getDatabaseConfig(configService),
+      useFactory: () => ({
+        type: 'postgres',
+        url: process.env.DATABASE_URL, // Dùng URL cổng 6543
+        ssl: { rejectUnauthorized: false },
+        autoLoadEntities: true,
+        synchronize: false, // Tuyệt đối không để true
+      }),
     }),
     CompaniesModule,
     UsersModule,
