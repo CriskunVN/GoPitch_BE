@@ -18,8 +18,8 @@ export class TimeSlot extends BaseEntity {
   @Column({ type: 'time' })
   end_time: Date;
 
-  @Column({ type: 'date' })
-  match_date: Date;
+  @Column({ type: 'boolean', default: true })
+  is_active: boolean;
 
   @ManyToOne(() => Pitch, (pitch) => pitch.timeSlots, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'pitch_id' })

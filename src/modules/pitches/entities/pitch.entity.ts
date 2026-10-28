@@ -1,4 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  type Relation,
+} from 'typeorm';
 import { BaseEntity } from '../../../common/entities/base.entity.js';
 import { Venue } from '../../venues/entities/venue.entity.js';
 import { TimeSlot } from '../../time-slots/entities/time-slot.entity.js';
@@ -16,16 +23,11 @@ export class Pitch extends BaseEntity {
   @Column({ type: 'enum', enum: PitchStatus })
   status: PitchStatus;
 
+  // Quan hệ với Venue (qua owner của venue)
   @ManyToOne(() => Venue, (venue) => venue.pitches, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'venue_id' })
-  venue: Venue;
+  venue: Relation<Venue>;
 
   @OneToMany(() => TimeSlot, (timeSlot) => timeSlot.pitch)
   timeSlots: TimeSlot[];
-
-  @OneToMany(
-    () => RecurringSchedule,
-    (recurringSchedule) => recurringSchedule.pitch,
-  )
-  recurringSchedules: RecurringSchedule[];
 }

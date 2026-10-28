@@ -3,6 +3,7 @@ import {
   Entity,
   Index,
   JoinColumn,
+  OneToMany,
   OneToOne,
   type Relation,
 } from 'typeorm';
@@ -10,6 +11,7 @@ import { BaseEntity } from '../../../common/entities/base.entity.js';
 import { UserRole } from '../../../common/enum/user-role.enum.js';
 import { Company } from '../../companies/entities/company.entity.js';
 import { Exclude } from 'class-transformer';
+import { Venue } from '../../venues/entities/venue.entity.js';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -34,6 +36,9 @@ export class User extends BaseEntity {
   @OneToOne(() => Company, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'company_id' })
   company: Relation<Company>;
+
+  @OneToMany(() => Venue, (venue) => venue.owner)
+  venues: Relation<Venue>[];
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   refresh_token_hash: string | null;

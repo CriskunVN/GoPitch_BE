@@ -32,11 +32,11 @@ export class Booking extends BaseEntity {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   vat_amount: number;
 
-  @ManyToOne(() => Company, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Company, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'company_id' })
   company: Relation<Company>;
 
-  @ManyToOne(() => Venue, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Venue, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'venue_id' })
   venue: Relation<Venue>;
 

@@ -15,23 +15,17 @@ export class RecurringSchedule extends BaseEntity {
   @Column({ type: 'varchar', length: 50 })
   day_of_week: string;
 
-  @Column({ type: 'time' })
-  start_time: Date;
+  @Column({ type: 'date' })
+  start_date: Date;
 
-  @Column({ type: 'time' })
-  end_time: Date;
+  @Column({ type: 'date' })
+  end_date: Date;
 
   @ManyToOne(() => Company, (Company) => Company.recurringSchedules, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'company_id' })
   company: Company;
-
-  @ManyToOne(() => Pitch, (Pitch) => Pitch.recurringSchedules, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'pitch_id' })
-  pitch: Pitch;
 
   @ManyToOne(() => TimeSlot, (TimeSlot) => TimeSlot.recurringSchedules, {
     onDelete: 'CASCADE',

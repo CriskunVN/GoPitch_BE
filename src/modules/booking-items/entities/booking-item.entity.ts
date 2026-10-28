@@ -28,7 +28,8 @@ export class BookingItem extends BaseEntity {
   booking: Relation<Booking>;
 
   @ManyToOne(() => TimeSlot, (timeSlot) => timeSlot.bookingItems, {
-    onDelete: 'CASCADE',
+    onDelete: 'RESTRICT',
   })
+  @JoinColumn({ name: 'time_slot_id' })
   timeSlot: TimeSlot;
 }

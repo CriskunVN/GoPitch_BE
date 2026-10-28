@@ -19,8 +19,8 @@ export class Invoice extends BaseEntity {
   @Column({ type: 'varchar', length: 500 })
   xml_url: string;
 
-  @OneToOne(() => Booking, {
-    onDelete: 'CASCADE',
+  @OneToOne(() => Booking, (booking) => booking.invoice, {
+    onDelete: 'RESTRICT',
   })
   @JoinColumn({ name: 'booking_id' })
   booking: Relation<Booking>;
